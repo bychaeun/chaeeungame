@@ -298,6 +298,161 @@
     50%      { transform: rotate(15deg); }
   }
   .wag { display: inline-block; animation: wag 1.4s ease-in-out infinite; }
+
+  /* ===== FESTIVAL INFO CARD ===== */
+  .festival-info-wrap { margin-bottom: 16px; }
+  .festival-toggle {
+    flex: 1;
+    background: #fff;
+    border: 2px solid #f9c0d8;
+    border-radius: 16px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: box-shadow 0.2s;
+  }
+  .festival-toggle:hover { box-shadow: 0 6px 18px rgba(232,84,122,0.13); }
+  .festival-toggle-front {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 11px 15px;
+    background: linear-gradient(135deg, #fce7f3, #fdf2ff);
+  }
+  .festival-hint {
+    font-family: 'Jua', sans-serif;
+    font-size: 13px;
+    color: #be185d;
+  }
+  .festival-arrow {
+    font-size: 12px; color: #be185d;
+    transition: transform 0.35s;
+    display: inline-block;
+  }
+  .festival-toggle.open .festival-arrow { transform: rotate(180deg); }
+  .festival-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.45s ease;
+    padding: 0 15px;
+  }
+  .festival-toggle.open .festival-body { max-height: 800px; padding: 0 15px 14px; }
+  .festival-title-row {
+    font-family: 'Jua', sans-serif;
+    font-size: 15px; color: var(--pink);
+    margin: 12px 0 4px;
+  }
+  .festival-addr {
+    font-size: 11px; color: var(--muted);
+    margin-bottom: 10px;
+    font-weight: 700;
+  }
+  .festival-schedule-title {
+    font-family: 'Jua', sans-serif;
+    font-size: 13px; color: var(--text);
+    margin-bottom: 8px;
+  }
+  .festival-table { border-radius: 10px; overflow: hidden; border: 1px solid #f5b8d0; }
+  .fest-row {
+    display: flex;
+    border-bottom: 1px solid #fce7f3;
+    font-size: 11px;
+    line-height: 1.6;
+  }
+  .fest-row:last-child { border-bottom: none; }
+  .fest-header {
+    background: #fce7f3;
+    font-family: 'Jua', sans-serif;
+    font-size: 11px;
+    color: #be185d;
+  }
+  .fest-time-col {
+    width: 90px; flex-shrink: 0;
+    padding: 6px 8px;
+    color: #c2185b;
+    font-weight: 700;
+    border-right: 1px solid #fce7f3;
+    font-size: 10px;
+    display: flex; align-items: center;
+  }
+  .fest-prog-col {
+    flex: 1;
+    padding: 6px 10px;
+    color: var(--text);
+  }
+  .fest-loc {
+    font-size: 10px;
+    color: var(--muted);
+    background: #fdf2f8;
+    border-radius: 6px;
+    padding: 0 5px;
+  }
+  .fest-highlight { background: #fff8f0; }
+  .fest-highlight .fest-time-col { color: #b45309; }
+  .fest-highlight .fest-prog-col { color: #92400e; font-weight: 700; }
+  .fest-sub {
+    font-size: 10px; color: var(--muted);
+    font-weight: 400; display: block;
+    margin-top: 1px;
+  }
+
+  /* ===== FLIP CARD ===== */
+  .hint-msg {
+    text-align: center;
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 12px;
+    letter-spacing: 0.3px;
+  }
+  .flip-wrap {
+    perspective: 600px;
+    cursor: pointer;
+    height: 120px;
+  }
+  .flip-inner {
+    position: relative;
+    width: 100%; height: 100%;
+    transform-style: preserve-3d;
+    transition: transform 0.5s cubic-bezier(.4,1.3,.6,1);
+  }
+  .flip-wrap.flipped .flip-inner { transform: rotateY(180deg); }
+
+  .flip-front, .flip-back {
+    position: absolute; inset: 0;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    border-radius: 18px;
+  }
+  .flip-front {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 4px; padding: 12px 8px 10px;
+    background: #fff;
+    border: 2px solid var(--border);
+    box-shadow: 0 3px 10px rgba(232,84,122,0.08);
+  }
+  .flip-front::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 3px; border-radius: 18px 18px 0 0;
+  }
+  .flip-front.girl::before { background: linear-gradient(to right, #f472b6, #e879f9); }
+  .flip-front.boy::before  { background: linear-gradient(to right, #60a5fa, #818cf8); }
+
+  .flip-back {
+    transform: rotateY(180deg);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 3px; padding: 10px 8px;
+  }
+  .flip-back.girl {
+    background: linear-gradient(135deg, #fce7f3, #f3e8ff);
+    border: 2px solid #f9a8d4;
+  }
+  .flip-back.boy {
+    background: linear-gradient(135deg, #eff6ff, #e0e7ff);
+    border: 2px solid #bfdbfe;
+  }
+  .back-emoji { font-size: 22px; line-height: 1; margin-bottom: 2px; }
+  .back-name  { font-family: 'Jua', sans-serif; font-size: 13px; color: var(--text); margin-bottom: 3px; }
+  .back-item  { font-size: 11px; color: var(--muted); font-weight: 700; line-height: 1.5; }
+  .flip-back.girl .back-item { color: #be185d; }
+  .flip-back.boy  .back-item { color: #1e40af; }
 </style>
 </head>
 <body>
@@ -315,37 +470,111 @@
 
   <!-- CHARACTERS -->
   <div class="section-label">🎮 오늘의 플레이어</div>
+  <div class="hint-msg">💡 플레이어 정보를 알고싶으면 이름을 눌러주세요!</div>
   <div class="chars-grid">
-    <div class="char-card girl">
-      <span class="char-avatar">👸</span>
-      <div class="char-name">정채은</div>
-      <div class="char-role">👑 보스</div>
+
+    <div class="flip-wrap" onclick="this.classList.toggle('flipped')">
+      <div class="flip-inner">
+        <div class="flip-front char-card girl">
+          <span class="char-avatar">👸</span>
+          <div class="char-name">정채은</div>
+          <div class="char-role">👑 보스</div>
+        </div>
+        <div class="flip-back girl">
+          <div class="back-emoji">👸</div>
+          <div class="back-name">정채은</div>
+          <div class="back-item">📅 1997년생</div>
+          <div class="back-item">🧠 INTJ</div>
+          <div class="back-item">👑 보스</div>
+        </div>
+      </div>
     </div>
-    <div class="char-card girl">
-      <span class="char-avatar">🌸</span>
-      <div class="char-name">이정운</div>
-      <div class="char-role">🐾 산책러</div>
+
+    <div class="flip-wrap" onclick="this.classList.toggle('flipped')">
+      <div class="flip-inner">
+        <div class="flip-front char-card girl">
+          <span class="char-avatar">🌸</span>
+          <div class="char-name">이정운</div>
+          <div class="char-role">🐾 산책러</div>
+        </div>
+        <div class="flip-back girl">
+          <div class="back-emoji">🌸</div>
+          <div class="back-name">이정운</div>
+          <div class="back-item">📅 1999년생</div>
+          <div class="back-item">🧠 ENFP</div>
+          <div class="back-item">🐾 산책러</div>
+        </div>
+      </div>
     </div>
-    <div class="char-card boy">
-      <span class="char-avatar">🚌</span>
-      <div class="char-name">조의현</div>
-      <div class="char-role">🚌 버스남</div>
+
+    <div class="flip-wrap" onclick="this.classList.toggle('flipped')">
+      <div class="flip-inner">
+        <div class="flip-front char-card boy">
+          <span class="char-avatar">🚌</span>
+          <div class="char-name">조의현</div>
+          <div class="char-role">🚌 버스남</div>
+        </div>
+        <div class="flip-back boy">
+          <div class="back-emoji">🚌</div>
+          <div class="back-name">조의현</div>
+          <div class="back-item">📅 1996년생</div>
+          <div class="back-item">🧠 ESTJ?</div>
+          <div class="back-item">🚌 버스남</div>
+        </div>
+      </div>
     </div>
-    <div class="char-card boy">
-      <span class="char-avatar">👦</span>
-      <div class="char-name">김지성</div>
-      <div class="char-role">👦 잼민이</div>
+
+    <div class="flip-wrap" onclick="this.classList.toggle('flipped')">
+      <div class="flip-inner">
+        <div class="flip-front char-card boy">
+          <span class="char-avatar">👦</span>
+          <div class="char-name">김지성</div>
+          <div class="char-role">👦 잼민이</div>
+        </div>
+        <div class="flip-back boy">
+          <div class="back-emoji">👦</div>
+          <div class="back-name">김지성</div>
+          <div class="back-item">📅 2003년생</div>
+          <div class="back-item">🧠 ENTP?</div>
+          <div class="back-item">👦 잼민이</div>
+        </div>
+      </div>
     </div>
-    <div class="char-card boy">
-      <span class="char-avatar">🚗</span>
-      <div class="char-name">오신구</div>
-      <div class="char-role">🛣️ 드라이버</div>
+
+    <div class="flip-wrap" onclick="this.classList.toggle('flipped')">
+      <div class="flip-inner">
+        <div class="flip-front char-card boy">
+          <span class="char-avatar">🚗</span>
+          <div class="char-name">오신구</div>
+          <div class="char-role">🛣️ 드라이버</div>
+        </div>
+        <div class="flip-back boy">
+          <div class="back-emoji">🚗</div>
+          <div class="back-name">오신구</div>
+          <div class="back-item">📅 1997년생</div>
+          <div class="back-item">🧠 친해져서 알 예정</div>
+          <div class="back-item">🛣️ 드라이버</div>
+        </div>
+      </div>
     </div>
-    <div class="char-card boy">
-      <span class="char-avatar">🎮</span>
-      <div class="char-name">박정민</div>
-      <div class="char-role">🛣️ 동승자</div>
+
+    <div class="flip-wrap" onclick="this.classList.toggle('flipped')">
+      <div class="flip-inner">
+        <div class="flip-front char-card boy">
+          <span class="char-avatar">🎮</span>
+          <div class="char-name">박정민</div>
+          <div class="char-role">🛣️ 동승자</div>
+        </div>
+        <div class="flip-back boy">
+          <div class="back-emoji">🎮</div>
+          <div class="back-name">박정민</div>
+          <div class="back-item">📅 1997년생</div>
+          <div class="back-item">🧠 ENFP</div>
+          <div class="back-item">🛣️ 동승자</div>
+        </div>
+      </div>
     </div>
+
   </div>
 
   <!-- TIMELINE -->
@@ -358,7 +587,7 @@
       <div class="event-dot" style="background:#ffe0b2;">🚌</div>
       <div class="event-card" style="border-color:#ffe0c0;">
         <div class="event-time">오전 9:00</div>
-        <div class="event-title">🚌 버스 탑승! 광주행 출발~</div>
+        <div class="event-title">🚌 버스 탑승! 광주 도착!</div>
         <div class="event-desc">조의현, 버스 타고 광주로 고고씽 🚀</div>
         <div class="char-tags">
           <span class="char-tag boy">🚌 조의현</span>
@@ -385,8 +614,8 @@
       <div class="event-dot" style="background:#bbdefb;">🚗</div>
       <div class="event-card" style="border-color:#b3d9ff;">
         <div class="event-time">오후 12:00</div>
-        <div class="event-title">🛣️ 충청도 출발 → 광주 고속질주</div>
-        <div class="event-desc">오신구 & 박정민, 자차로 씽씽 달려오는 중 💨</div>
+        <div class="event-title">🛣️ 충청도 출발 → 광주 도착!</div>
+        <div class="event-desc">오신구 & 박정민, 자차로 씽씽 달려서 광주 도착 💨</div>
         <div class="char-tags">
           <span class="char-tag boy">🚗 오신구</span>
           <span class="char-tag boy">🎮 박정민</span>
@@ -442,7 +671,70 @@
           <span class="char-tag boy">🚗 오신구</span>
           <span class="char-tag boy">🎮 박정민</span>
         </div>
-        <div class="unknown-badge">📍 영암 축제</div>
+        <div class="unknown-badge">📍 영암 왕인 문화축제</div>
+      </div>
+    </div>
+
+    <!-- festival info card -->
+    <div class="event festival-info-wrap">
+      <div class="event-dot" style="background:#fce7f3;">🌸</div>
+      <div class="festival-toggle" onclick="this.classList.toggle('open')">
+        <div class="festival-toggle-front">
+          <span class="festival-hint">🎟️ 축제 정보를 알고싶으면 카드를 눌러주세요!</span>
+          <span class="festival-arrow">▼</span>
+        </div>
+        <div class="festival-body">
+          <div class="festival-title-row">🌸 영암 왕인 문화축제</div>
+          <div class="festival-addr">📍 전라남도 영암군 군서면 왕인로 440</div>
+          <div class="festival-schedule-title">📅 4월 4일 (토) 일정</div>
+          <div class="festival-table">
+            <div class="fest-row fest-header">
+              <div class="fest-time-col">시간</div>
+              <div class="fest-prog-col">프로그램</div>
+            </div>
+            <div class="fest-row">
+              <div class="fest-time-col">10:00~13:00</div>
+              <div class="fest-prog-col">🌸 영암 벚꽃 마라톤대회</div>
+            </div>
+            <div class="fest-row">
+              <div class="fest-time-col">14:00~15:00</div>
+              <div class="fest-prog-col">
+                🏛️ 왕인박사 마당극 <span class="fest-loc">상대포</span><br>
+                📖 리딩스&amp;숨결 <span class="fest-loc">수석전시관</span><br>
+                ♟️ 마한의 심장 바둑두기 행사 <span class="fest-loc">바둑팅</span>
+              </div>
+            </div>
+            <div class="fest-row">
+              <div class="fest-time-col">15:00~16:00</div>
+              <div class="fest-prog-col">
+                📚 인문학항해 <span class="fest-loc">대지예술쉼터</span><br>
+                📖 리딩스&amp;숨결 <span class="fest-loc">행사장일원</span>
+              </div>
+            </div>
+            <div class="fest-row">
+              <div class="fest-time-col">16:00~17:00</div>
+              <div class="fest-prog-col">
+                🏛️ 왕인박사 마당극 <span class="fest-loc">상대포</span><br>
+                📖 리딩스&amp;숨결 <span class="fest-loc">수석전시관</span><br>
+                🗺️ 항해자의 지도 <span class="fest-loc">왕인동상</span>
+              </div>
+            </div>
+            <div class="fest-row">
+              <div class="fest-time-col">17:00~18:00</div>
+              <div class="fest-prog-col">
+                📖 리딩스&amp;숨결 <span class="fest-loc">행사장일원</span>
+              </div>
+            </div>
+            <div class="fest-row fest-highlight">
+              <div class="fest-time-col">18:00~19:00</div>
+              <div class="fest-prog-col">🎆 상대포 판타지 &lt;낙화콘서트&gt;<br><span class="fest-sub">더보플스·브로콜리 너마저·영암국악협회<br>안애은·낙화유수 @ 상대포 역사공원</span></div>
+            </div>
+            <div class="fest-row fest-highlight">
+              <div class="fest-time-col">19:00~20:00</div>
+              <div class="fest-prog-col">🎶 낙화콘서트 계속<br><span class="fest-sub">@ 상대포 역사공원</span></div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
