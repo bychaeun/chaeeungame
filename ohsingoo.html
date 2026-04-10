@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OH SINGOO VIRTUAL PET</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{background:#2a2a3a;display:flex;justify-content:center;align-items:flex-start;min-height:100vh;padding:24px 12px;font-family:'Courier New',monospace}
+.console{width:360px;background:#d4c9b8;border-radius:28px;padding:18px 16px 28px;border:3px solid #a89880;position:relative}
+.console-top{background:#c8bda8;border-radius:16px 16px 0 0;padding:10px 12px 0;margin:-18px -16px 0;border-bottom:2px solid #a89880}
+.ctitle{font-size:10px;color:#7a6a58;text-align:center;letter-spacing:2px;padding-bottom:6px}
+.holes{display:flex;justify-content:center;gap:4px;margin-bottom:8px}
+.hole{width:4px;height:4px;border-radius:50%;background:#a89880}
+.bezel{background:#1a1a2a;border-radius:12px;padding:10px;margin:12px 0;border:3px solid #333}
+.sinner{border:2px solid #0a0a18;border-radius:6px;overflow:hidden;position:relative}
+.bubble{position:absolute;top:6px;left:50%;transform:translateX(-50%);background:#fffff0;border:1px solid #aaa;border-radius:6px;padding:3px 8px;font-size:10px;color:#333;white-space:nowrap;opacity:0;transition:opacity .3s;z-index:10;pointer-events:none}
+.bubble.show{opacity:1}
+canvas{display:block;image-rendering:pixelated;width:100%;height:auto}
+.stats{background:#e8ddd0;border-radius:8px;padding:8px 10px;margin-bottom:10px;border:1.5px solid #b8a890}
+.sr{display:flex;align-items:center;gap:6px;margin-bottom:4px}
+.sr:last-child{margin-bottom:0}
+.sl{font-size:9px;color:#7a6a58;width:36px;flex-shrink:0}
+.sb{flex:1;height:7px;background:#c8bda8;border-radius:3px;overflow:hidden;border:1px solid #a89880}
+.sf{height:100%;border-radius:2px;transition:width .4s}
+.fa{background:#c8820a}.ft{background:#1a8a5a}.fp{background:#c83a6a}
+.sn{font-size:9px;color:#7a6a58;width:22px;text-align:right}
+.moodbar{background:#e8ddd0;border:1.5px solid #b8a890;border-radius:6px;padding:5px 10px;margin-bottom:10px;font-size:10px;color:#5a4a38;text-align:center;min-height:24px}
+.btns{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:10px}
+.gb{background:rgba(255,255,255,0.5);border:1.5px solid rgba(180,160,140,0.7);border-radius:8px;padding:8px 4px 6px;cursor:pointer;text-align:center;border-bottom:3px solid rgba(140,120,100,0.6);transition:transform .08s}
+.gb:active{transform:translateY(2px);border-bottom-width:1px}
+.gi{font-size:15px;display:block;margin-bottom:2px}
+.gl{font-size:9px;color:#5a4a38;font-weight:700}
+.cbot{display:flex;justify-content:space-between;align-items:center;margin-top:4px}
+.dpad{width:64px;height:64px;position:relative;flex-shrink:0}
+.dh{position:absolute;top:50%;left:0;transform:translateY(-50%);width:64px;height:20px;background:#b8a890;border-radius:4px;border-bottom:2px solid #8a7a68}
+.dv{position:absolute;left:50%;top:0;transform:translateX(-50%);height:64px;width:20px;background:#b8a890;border-radius:4px;border-bottom:2px solid #8a7a68}
+.dc{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:20px;height:20px;background:#a89880;border-radius:2px}
+.abs{display:flex;flex-direction:column;gap:8px;align-items:center}
+.abrow{display:flex;gap:8px}
+.cbtn{width:26px;height:26px;border-radius:50%;border:none;cursor:pointer;font-size:9px;color:white;font-weight:700;border-bottom:3px solid rgba(0,0,0,0.25)}
+.cr{background:#c83a3a}.cb{background:#3a6ac8}.cg{background:#3a8a3a}.cy{background:#c8a83a}
+.mids{display:flex;gap:6px;align-items:center}
+.sm{background:#9a8a78;border:none;border-radius:3px;padding:5px 10px;font-size:8px;color:#e8ddd0;cursor:pointer;font-family:'Courier New',monospace;border-bottom:2px solid #6a5a48;font-weight:700;letter-spacing:1px}
+.sm:active{transform:translateY(1px);border-bottom-width:1px}
+</style>
+</head>
+<body>
+<div class="console">
+  <div class="console-top">
+    <div class="ctitle">&#9670; OH SINGOO VIRTUAL PET &#9670;</div>
+    <div class="holes"><div class="hole"></div><div class="hole"></div><div class="hole"></div><div class="hole"></div><div class="hole"></div><div class="hole"></div></div>
+  </div>
+  <div class="bezel"><div class="sinner">
+    <div class="bubble" id="bub"></div>
+    <canvas id="gc" width="240" height="168"></canvas>
+  </div></div>
+  <div class="stats">
+    <div class="sr"><span class="sl">FOOD</span><div class="sb"><div class="sf fa" id="bf" style="width:60%"></div></div><span class="sn" id="nf">60</span></div>
+    <div class="sr"><span class="sl">MOOD</span><div class="sb"><div class="sf ft" id="bh" style="width:50%"></div></div><span class="sn" id="nh">50</span></div>
+    <div class="sr"><span class="sl">LOVE</span><div class="sb"><div class="sf fp" id="bl" style="width:20%"></div></div><span class="sn" id="nl">20</span></div>
+  </div>
+  <div class="moodbar" id="mood">... 청주에서 하루를 보내는 중 ...</div>
+  <div class="btns">
+    <button class="gb" id="b0"><span class="gi">🍙</span><span class="gl">밥 주기</span></button>
+    <button class="gb" id="b1"><span class="gi">💬</span><span class="gl">말 걸기</span></button>
+    <button class="gb" id="b2"><span class="gi">🎁</span><span class="gl">선물</span></button>
+    <button class="gb" id="b3"><span class="gi">🌿</span><span class="gl">소풍</span></button>
+    <button class="gb" id="b4"><span class="gi">🌙</span><span class="gl">산책</span></button>
+    <button class="gb" id="b5"><span class="gi">📵</span><span class="gl">무시</span></button>
+  </div>
+  <div class="cbot">
+    <div class="dpad"><div class="dh"></div><div class="dv"></div><div class="dc"></div></div>
+    <div class="mids"><button class="sm" id="rst">RESET</button><button class="sm">START</button></div>
+    <div class="abs">
+      <div class="abrow"><button class="cbtn cy">Y</button><button class="cbtn cr">B</button></div>
+      <div class="abrow"><button class="cbtn cb">X</button><button class="cbtn cg">A</button></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const cv=document.getElementById('gc'),ctx=cv.getContext('2d');
+ctx.imageSmoothingEnabled=false;
+const W=240,H=168,SC=2,SPW=50,SPH=50;
+const PAL={1:"#000000",2:"#4f2f21",3:"#703e28",4:"#e5aa7a",5:"#ffece3",6:"#ebcfc3",7:"#ffa3b1",8:"#b4b4b4",9:"#ffffff",10:"#8f8f8f",11:"#009ccc",12:"#00b7ef",13:"#99d9ea",14:"#e6e6e6"};
+const DAT=[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,2,2,1,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,2,2,3,3,1,2,2,2,2,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,2,2,2,3,3,3,3,3,3,3,3,2,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,2,3,3,3,3,3,3,3,3,3,2,2,2,3,2,2,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,2,3,3,3,3,3,3,3,3,3,2,2,3,3,3,2,2,2,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,2,2,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,2,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,2,3,3,3,2,3,3,3,3,3,3,3,3,3,3,3,2,2,3,3,3,2,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,2,3,3,3,3,2,2,3,3,3,2,3,3,3,3,3,3,3,2,2,3,3,2,2,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,2,3,3,3,3,3,3,2,2,3,3,2,3,3,3,3,3,3,3,3,2,3,4,4,3,2,2,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,2,3,4,3,3,3,3,3,2,3,3,2,3,3,3,3,3,3,3,3,2,4,3,3,3,2,2,2,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,2,3,4,3,3,3,4,4,2,2,3,2,2,2,3,4,4,3,3,3,4,4,3,3,3,3,2,2,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,2,3,3,3,3,3,4,4,3,2,3,4,2,2,3,4,4,3,3,3,3,3,3,3,2,3,2,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,2,3,3,3,3,3,3,2,2,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,2,3,2,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,2,3,3,3,3,3,3,2,1,3,3,3,2,3,3,3,2,3,3,3,3,3,3,3,2,2,3,2,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,2,3,3,3,3,3,2,1,5,1,2,3,2,2,3,3,2,2,3,3,3,3,3,3,2,3,3,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,2,3,3,3,3,3,1,5,5,1,2,3,3,1,1,2,2,2,3,3,3,3,3,3,2,2,3,2,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,2,3,3,3,1,5,5,5,1,1,3,3,1,5,1,1,3,3,3,3,3,3,3,3,3,2,2,2,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,2,3,3,3,1,5,5,5,5,5,1,3,1,5,5,5,1,2,2,3,3,3,3,3,2,2,2,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,3,3,3,2,1,1,1,1,1,5,1,1,5,1,1,1,1,1,2,3,3,2,2,2,2,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,3,3,2,1,5,2,2,2,5,5,1,5,5,2,2,2,5,1,3,1,1,1,2,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,2,2,1,5,5,2,2,2,5,5,5,5,5,2,2,2,5,5,1,6,6,6,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,2,1,5,5,5,3,3,4,5,5,5,5,5,4,3,3,5,5,5,5,6,6,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,5,7,7,7,5,5,5,5,5,5,5,7,7,7,5,5,1,6,6,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,5,5,5,5,5,5,5,5,5,5,5,5,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,5,5,5,5,1,1,1,1,2,2,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,8,1,1,6,6,1,1,8,1,2,3,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,8,8,8,9,1,1,9,8,8,8,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,8,8,8,9,9,9,9,8,8,8,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,8,8,8,10,8,9,9,9,9,8,10,8,8,8,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,8,8,8,10,8,9,9,9,9,8,10,8,8,8,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,8,8,8,10,8,9,9,9,9,8,10,8,8,8,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,8,8,8,10,8,8,8,9,9,8,8,8,10,8,8,8,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,10,10,10,8,8,8,11,11,11,11,8,8,8,10,10,10,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,5,5,10,8,8,11,12,12,12,12,11,8,8,10,5,5,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,5,5,10,8,11,11,12,12,12,12,11,11,8,10,5,5,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,11,11,11,12,12,11,11,12,12,11,11,11,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,12,12,12,12,11,1,1,11,12,12,12,12,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,12,12,12,12,1,0,0,1,12,12,12,12,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,13,13,13,13,1,0,0,1,13,13,13,13,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,13,13,13,13,1,0,0,1,13,13,13,13,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,14,14,1,1,0,0,1,1,14,14,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,9,9,9,9,1,0,0,1,9,9,9,9,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,14,14,14,14,1,0,0,1,14,14,14,14,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+
+const GH=Math.floor(H*0.68),CX=Math.floor(W/2-SPW*SC/2);
+
+function blit(ox,oy,emo,armA,lL,lR){
+  for(let y=0;y<SPH;y++)for(let x=0;x<SPW;x++){
+    const idx=DAT[y*SPW+x];if(!idx)continue;
+    let dy=0;
+    if(y>=18&&y<=35){if(x<=7)dy=Math.round(armA);else if(x>=43)dy=-Math.round(armA);}
+    if(y>=36&&y<=47){if(x<25)dy=Math.round(lL);else dy=Math.round(lR);}
+    ctx.fillStyle=PAL[idx];ctx.fillRect(Math.round(ox+x*SC),Math.round(oy+(y+dy)*SC),SC,SC);
+  }
+  const f=SC;
+  ctx.fillStyle=PAL[5];ctx.fillRect(ox+15*f,oy+19*f,20*f,9*f);
+  if(emo==='happy'||emo==='love'){
+    ctx.fillStyle='#000';[[17,21],[18,20],[19,21],[27,21],[28,20],[29,21]].forEach(([ex,ey])=>ctx.fillRect(ox+ex*f,oy+ey*f,f,f));
+    ctx.fillStyle='#ffa3b1';[[15,23],[16,23],[30,23],[31,23]].forEach(([ex,ey])=>ctx.fillRect(ox+ex*f,oy+ey*f,f,f));
+    ctx.fillStyle='#c06070';[[19,25],[20,25],[21,25],[22,25],[23,25],[24,25],[18,24],[25,24]].forEach(([ex,ey])=>ctx.fillRect(ox+ex*f,oy+ey*f,f,f));
+  }else if(emo==='cry'||emo==='sad'){
+    ctx.fillStyle='#000';[[17,22],[18,22],[19,22],[27,22],[28,22],[29,22]].forEach(([ex,ey])=>ctx.fillRect(ox+ex*f,oy+ey*f,f,f));
+    ctx.fillStyle='#8a6060';[[19,25],[20,25],[21,25],[22,25],[23,25],[24,25],[18,26],[25,26]].forEach(([ex,ey])=>ctx.fillRect(ox+ex*f,oy+ey*f,f,f));
+    if(emo==='cry'){ctx.fillStyle='#80c0ff';[[16,24],[16,25],[16,26],[15,27],[29,24],[29,25],[29,26],[30,27]].forEach(([ex,ey])=>ctx.fillRect(ox+ex*f,oy+ey*f,f,f));}
+  }else if(emo==='eat'){
+    ctx.fillStyle='#000';[[17,21],[18,21],[19,21],[27,21],[28,21],[29,21]].forEach(([ex,ey])=>ctx.fillRect(ox+ex*f,oy+ey*f,f,f));
+    ctx.fillStyle='#ffa3b1';[[15,23],[16,23],[30,23],[31,23]].forEach(([ex,ey])=>ctx.fillRect(ox+ex*f,oy+ey*f,f,f));
+    ctx.fillStyle='#c06070';[[19,24],[20,24],[21,24],[22,24],[23,24],[24,24]].forEach(([ex,ey])=>ctx.fillRect(ox+ex*f,oy+ey*f,f,f));
+  }else{
+    ctx.fillStyle='#000';[[17,21],[18,21],[19,21],[27,21],[28,21],[29,21]].forEach(([ex,ey])=>ctx.fillRect(ox+ex*f,oy+ey*f,f,f));
+    ctx.fillStyle='#b08080';[[20,25],[21,25],[22,25],[23,25]].forEach(([ex,ey])=>ctx.fillRect(ox+ex*f,oy+ey*f,f,f));
+  }
+}
+
+function bgIdle(){
+  ctx.fillStyle='#c8e8f8';ctx.fillRect(0,0,W,H);
+  ctx.fillStyle='#7abf5a';ctx.fillRect(0,GH,W,H-GH);
+  ctx.fillStyle='#5a9a3a';ctx.fillRect(0,GH,W,3);
+  for(let gx=0;gx<W;gx+=9){ctx.fillStyle='#4aaf3a';ctx.fillRect(gx,GH-4,3,4);ctx.fillRect(gx+4,GH-6,3,6);}
+  ctx.fillStyle='#f0d030';
+  for(let i=0;i<8;i++){const a=i*Math.PI/4+gT*0.015;ctx.fillRect(Math.round(200+Math.cos(a)*10),Math.round(18+Math.sin(a)*10),3,3);}
+  ctx.fillRect(193,11,15,15);ctx.fillStyle='#fff8a0';ctx.fillRect(196,14,9,9);
+}
+function bgNight(){
+  ctx.fillStyle='#1a2040';ctx.fillRect(0,0,W,H);
+  ctx.fillStyle='#3a5a3a';ctx.fillRect(0,GH,W,H-GH);
+  [[20,18],[60,30],[110,10],[165,24],[40,46],[150,40]].forEach(([sx,sy])=>{ctx.fillStyle='#fff8e0';ctx.fillRect(sx,sy,2,2);});
+  ctx.fillStyle='#f0f0c0';for(let dx=-5;dx<=5;dx++)for(let dy=-5;dy<=5;dy++){if(dx*dx+dy*dy<=25)ctx.fillRect(210+dx*2,18+dy*2,2,2);}
+  ctx.fillStyle='#1a2040';for(let dx=2;dx<=6;dx++)for(let dy=-4;dy<=4;dy++){if(dx*dx+dy*dy<=20)ctx.fillRect(210+dx*2,18+dy*2,2,2);}
+}
+function drawTree(tx,ty){
+  for(let dy=14;dy<=20;dy++)for(let dx=4;dx<=7;dx++){ctx.fillStyle='#5a3a1a';ctx.fillRect(tx+dx*2,ty+dy*2,2,2);}
+  [[2,8],[4,7],[6,6],[8,7],[10,8],[0,10],[2,10],[4,10],[6,10],[8,10],[10,10],[12,10],[2,12],[4,12],[6,12],[8,12],[10,12],[4,14],[6,14],[8,14]].forEach(([lx,ly])=>{ctx.fillStyle=ly<10?'#3aaf3a':'#2a8f2a';ctx.fillRect(tx+lx*2,ty+ly*2,2,2);});
+}
+function bgWalk(s){
+  bgNight();ctx.fillStyle='#d4b870';ctx.fillRect(0,GH+4,W,10);
+  for(let ti=0;ti<4;ti++){const tx=((ti*90-s*1.5)%400+400)%400-20;drawTree(tx,GH-58);}
+  for(let gi=0;gi<14;gi++){const gx=((gi*24-s)%320+320)%320;ctx.fillStyle='#4aaf3a';ctx.fillRect(gx,GH-4,2,4);ctx.fillRect(gx+5,GH-7,2,7);}
+}
+function bgPicnic(){
+  ctx.fillStyle='#c0e8f8';ctx.fillRect(0,0,W,H);
+  ctx.fillStyle='#7abf5a';ctx.fillRect(0,GH-6,W,H-GH+6);
+  ctx.fillStyle='#e87050';ctx.fillRect(50,GH,120,28);ctx.fillStyle='#f09070';ctx.fillRect(50,GH,120,4);
+  [[0,4],[2,4],[4,4],[6,4],[8,4],[10,4],[0,6],[10,6],[0,8],[2,8],[4,8],[6,8],[8,8],[10,8],[4,0],[6,0],[2,2],[8,2]].forEach(([bx,by])=>{ctx.fillStyle='#c8903a';ctx.fillRect(170+bx*2,GH-4+by*2,2,2);});
+  ctx.fillStyle='#f0d030';for(let i=0;i<8;i++){const a=i*Math.PI/4+gT*0.02;ctx.fillRect(Math.round(200+Math.cos(a)*10),Math.round(14+Math.sin(a)*10),3,3);}
+  ctx.fillRect(193,7,15,15);ctx.fillStyle='#fff8a0';ctx.fillRect(196,10,9,9);
+  [[10,'#f0d030'],[25,'#e060a0'],[180,'#f0d030'],[195,'#e060a0']].forEach(([fx,fc])=>{
+    [[2,0],[0,2],[4,2],[2,4]].forEach(([px,py])=>{ctx.fillStyle=fc;ctx.fillRect(fx+px,GH-10+py,2,2);});
+    ctx.fillStyle='#ffff80';ctx.fillRect(fx+2,GH-8,2,2);ctx.fillStyle='#3aaf3a';ctx.fillRect(fx+2,GH-4,2,5);
+  });
+}
+function bgRain(){
+  ctx.fillStyle='#8090b0';ctx.fillRect(0,0,W,H);
+  ctx.fillStyle='#3a5a3a';ctx.fillRect(0,GH,W,H-GH);
+  for(let i=0;i<5;i++){ctx.fillStyle='#a0b0c8';ctx.fillRect(15+i*45,10,30,8);ctx.fillRect(19+i*45,6,22,8);}
+  ctx.fillStyle='#80a8cc';
+  for(let ri=0;ri<20;ri++){const rx=((ri*23+sT*4)%W+W)%W,ry=((ri*37+sT*3)%(H-20)+8);ctx.fillRect(rx,ry,2,5);}
+}
+function heartDraw(x,y,s,a){
+  ctx.globalAlpha=a||1;ctx.fillStyle='#e84070';
+  [[2,0],[4,0],[8,0],[10,0],[0,2],[2,2],[4,2],[6,2],[8,2],[10,2],[12,2],[0,4],[2,4],[4,4],[6,4],[8,4],[10,4],[12,4],[2,6],[4,6],[6,6],[8,6],[10,6],[4,8],[6,8],[8,8],[6,10]].forEach(([dx,dy])=>ctx.fillRect(x+dx*s,y+dy*s,s,s));
+  ctx.globalAlpha=1;
+}
+function onigiri(x,y){
+  [[2,0],[4,0],[6,0],[8,0],[0,2],[2,2],[4,2],[6,2],[8,2],[10,2],[0,4],[2,4],[4,4],[6,4],[8,4],[10,4],[2,6],[4,6],[6,6],[8,6]].forEach(([dx,dy])=>{ctx.fillStyle='#fff';ctx.fillRect(x+dx,y+dy,2,2);});
+  [[0,4],[2,4],[4,4],[6,4],[8,4],[10,4]].forEach(([dx,dy])=>{ctx.fillStyle='#2a3a1a';ctx.fillRect(x+dx,y+dy,2,2);});
+  [[4,4],[6,4]].forEach(([dx,dy])=>{ctx.fillStyle='#fff';ctx.fillRect(x+dx,y+dy,2,2);});
+  ctx.fillStyle='#c0b080';ctx.fillRect(x+4,y+2,2,2);ctx.fillRect(x+8,y+2,2,2);
+}
+
+let st={food:60,happy:50,heart:20},scene='idle',sT=0,sLen=Infinity,sCb=null,gT=0;
+const moods={idle:['... 청주에서 하루를 보내는 중 ...','... 혼자 생각 중이에유 ...'],happy:['!! 기분 좋은 하루에유 !!'],sad:['... 좀 쓸쓸하네유 ...'],cry:['... 훌쩍 왜 연락이 없는겨 ...'],love:['!! 자꾸 생각나네유 !!'],hungry:['... 배고프네유 ...']};
+function getMood(){if(st.heart>=80)return'love';if(st.food<25)return'hungry';if(st.happy<25)return'sad';return'idle';}
+function cl(v){return Math.max(0,Math.min(100,v));}
+function ui(){
+  const vf=Math.round(cl(st.food)),vh=Math.round(cl(st.happy)),vl=Math.round(cl(st.heart));
+  document.getElementById('bf').style.width=vf+'%';document.getElementById('nf').textContent=vf;
+  document.getElementById('bh').style.width=vh+'%';document.getElementById('nh').textContent=vh;
+  document.getElementById('bl').style.width=vl+'%';document.getElementById('nl').textContent=vl;
+  const m=getMood();const list=moods[m]||moods.idle;document.getElementById('mood').textContent=list[Math.floor(Math.random()*list.length)];
+}
+function showBub(t){const b=document.getElementById('bub');b.textContent=t;b.classList.add('show');setTimeout(()=>b.classList.remove('show'),2500);}
+function setS(n,l,cb){scene=n;sT=0;sLen=l||Infinity;sCb=cb||null;}
+
+function frame(){
+  ctx.clearRect(0,0,W,H);
+  const cy=GH-SPH*SC,bob=Math.round(Math.sin(gT*0.07)*1.5),arm=Math.sin(gT*0.1)*0.8;
+  if(scene==='idle'||scene==='talk'){
+    bgIdle();const emo=getMood()==='love'?'love':scene==='talk'?'happy':getMood()==='sad'?'sad':'idle';
+    blit(CX,cy+bob,emo,arm,0,0);
+  }else if(scene==='food'){
+    bgIdle();
+    if(sT<45){const p=sT/45;onigiri(Math.round(W*0.78-p*W*0.38),Math.round(GH*0.4+Math.sin(p*Math.PI)*-25));blit(CX,cy,'idle',0,0,0);}
+    else{const ch=Math.sin((sT-45)*0.3)*1.2;blit(CX,cy+Math.round(Math.abs(ch)*0.5),'eat',-1+ch,0,0);if(sT<95)onigiri(CX+SPW*SC+2,cy+Math.round(SPH*SC*0.55));}
+  }else if(scene==='gift'){
+    bgIdle();blit(CX,cy+bob,'love',arm*0.5,0,0);
+    for(let i=0;i<10;i++){const ph=sT*0.05+i*(Math.PI*2/10),hx=Math.round(W/2-6+Math.cos(ph)*(28+i*3)),hy=Math.round(H*0.3-(sT*0.5+i*7)%70);if(hy>5&&hy<H-10)heartDraw(hx,hy,2,Math.max(0.1,1-(sT%70)/70));}
+  }else if(scene==='play'){
+    bgPicnic();const bn=Math.round(Math.abs(Math.sin(sT*0.15))*-8),dA=Math.sin(sT*0.15)*2.5,dL=Math.sin(sT*0.15);
+    blit(CX,cy+bn,'happy',dA,Math.round(dL),Math.round(-dL));
+  }else if(scene==='walk'){
+    bgWalk(sT);const wA=Math.sin(sT*0.18)*1.5,wL=Math.sin(sT*0.18);
+    blit(Math.floor(W*0.35)-SPW*SC/2,cy,'idle',wA,Math.round(wL),Math.round(-wL));
+  }else if(scene==='ignore'){
+    bgRain();const sob=Math.sin(sT*0.12)*0.8;
+    blit(CX,cy+Math.round(Math.abs(sob)),'cry',-sob*0.5,0,0);
+    ctx.fillStyle='#80c0ff';for(let di=0;di<5;di++)ctx.fillRect(Math.round(W/2-10+di*12),Math.round(((sT*2+di*22)%80)+GH*0.4),2,5);
+  }
+}
+
+const acts=[
+  {sp:['맛있겠네유~','감사해유!'],eff:()=>{st.food=cl(st.food+20);st.happy=cl(st.happy+5);st.heart=cl(st.heart+3);},log:'주먹밥을 맛있게 먹고 있어유 :)',sc:'food',dur:110},
+  {sp:['어... 그렇군유.','응 맞아유!'],eff:()=>{st.happy=cl(st.happy+12);st.heart=cl(st.heart+8);},log:'이야기를 듣고 있어유...',sc:'talk',dur:80},
+  {sp:['고마워유... 진짜로유.'],eff:()=>{st.happy=cl(st.happy+15);st.heart=cl(st.heart+15);},log:'수줍어하고 있어유 ^^',sc:'gift',dur:130},
+  {sp:['재밌네유!','이런 거 좋아유.'],eff:()=>{st.happy=cl(st.happy+18);st.heart=cl(st.heart+10);st.food=cl(st.food-5);},log:'소풍 중이에유! 신나게 춤추고 있어유',sc:'play',dur:150},
+  {sp:['청주 밤이 좋네유...'],eff:()=>{st.happy=cl(st.happy+10);st.heart=cl(st.heart+12);st.food=cl(st.food-8);},log:'산책 중이에유... 나무 사이를 걷고 있어유.',sc:'walk',dur:200},
+  {sp:['...','왜 연락을 안 하는겨...'],eff:()=>{st.happy=cl(st.happy-15);st.heart=cl(st.heart-10);},log:'혼자 울고 있어유 ㅠ 연락 좀 해줘유...',sc:'ignore',dur:160},
+];
+for(let i=0;i<6;i++){
+  document.getElementById('b'+i).addEventListener('click',(i=>{
+    return()=>{const a=acts[i];a.eff();ui();showBub('"'+a.sp[Math.floor(Math.random()*a.sp.length)]+'"');document.getElementById('mood').textContent=a.log;setS(a.sc,a.dur,()=>setS('idle',Infinity,null));};
+  })(i));
+}
+document.getElementById('rst').addEventListener('click',()=>{st={food:60,happy:50,heart:20};ui();setS('idle',Infinity,null);showBub('"다시 시작이에유 ㅎ"');});
+setInterval(()=>{st.food=cl(st.food-1);st.happy=cl(st.happy-0.5);ui();},8000);
+function loop(){gT++;sT++;if(sLen!==Infinity&&sT>=sLen&&sCb){const cb=sCb;sCb=null;cb();}frame();setTimeout(loop,60);}
+ui();loop();
+</script>
+</body>
+</html>
